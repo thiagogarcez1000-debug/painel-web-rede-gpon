@@ -1,0 +1,25 @@
+# Configuração local (contém senhas e chaves) – nunca versionar
+config.json
+.env
+whatsapp_sessao/
+
+# Dados da rede da Prefeitura (IPs, seriais, localização)
+*.xlsx
+*.xls
+*.csv
+*.kmz
+*.kml
+*.db
+*.sqlite
+historico/
+rotas_*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Empacotamento
+build/
+dist/
+*.exe
