@@ -1,0 +1,1 @@
+{"ARQUIVO_PONTOS":"dados/pontos.xlsx","BANCO":"dados/painel.sqlite","WEB_PORTA":8000,"INTERVALO_VARREDURA_SEG":300,"CONFIRMAR_QUEDA_VARREDURAS":2,"AVISAR_QUANDO_VOLTAR":true,"ALERTA_CANAL":"whatsapp","ALERTA_DESTINO":"<numero-da-equipe>","ALERTA_APIKEY":"<preencher-somente-no-servidor>","SECRET_KEY":"<gerar-chave-aleatoria>"}
