@@ -11,20 +11,35 @@ Painel web, acessível pelo computador e pelo celular (rede interna ou VPN), par
 os cerca de 580 pontos da rede GPON da Prefeitura (unidades públicas, Wi-Fi público e câmeras), com busca,
 detalhe do ponto, histórico de quedas, mapa com a rota da fibra, destaque de quedas em massa e alertas.
 
-## Situação
+## Situação (12/11/2026)
 - Já existe um **protótipo** (servidor HTTP próprio em Python) usado internamente pela Gerência de TI.
   Ele fica em repositório **privado**, porque contém configurações e dados da rede.
-- Este repositório é a versão estruturada da disciplina (Flask + SQLite), desenvolvida ao longo das sprints.
+- Este repositório é a versão estruturada da disciplina (Flask + SQLite).
+- **Sprint 01** (até 11/10, revisões em 27/10): requisitos, arquitetura e documentação.
+- **Sprint 02** (W03–W07): implementada com atraso, em **12/11/2026** – estrutura Flask, SQLite,
+  importação, login com perfis, painel, busca e filtros, 13 testes automatizados. W07 parcial.
+  Detalhes em [`docs/sprint02.md`](docs/sprint02.md).
 
-## Estrutura planejada
+## Como executar (desenvolvimento, dados fictícios)
+```
+pip install -r requirements.txt
+python importar.py --ficticio
+python criar_usuario.py thiago "Thiago Garcez" admin
+python run.py              # http://127.0.0.1:8000
+python -m pytest -q testes
+```
+
+## Estrutura
 - `app/` – aplicação Flask (rotas, templates, API JSON, autenticação)
 - `app/static/` – CSS e JavaScript do painel (responsivo)
-- `varredura/` – serviço de varredura por ping
-- `docs/` – arquitetura, modelo de dados e documentação
+- `importar.py` – importação de dados fictícios ou da planilha (planilha real só no servidor)
+- `testes/` – testes automatizados (pytest)
+- `docs/` – arquitetura, rotas e registros das sprints
+- `varredura/` – serviço de varredura por ping (planejado, Sprint 03)
 
 ## Segurança
 Senhas, chaves de API e planilhas com IPs **não** são versionadas. Use `config.exemplo.json` como modelo
-e crie o `config.json` apenas no servidor interno.
+e crie o `config.json` apenas no servidor interno. As senhas dos usuários do painel ficam só como hash.
 
 ## Sprints
 | Sprint | Período | Foco |
