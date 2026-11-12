@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}Painel{% endblock %}
+{% block conteudo %}
+<section class="resumo" aria-label="Resumo da rede">
+  <div class="cx"><b id="r-total">{{ resumo.total }}</b><span>pontos</span></div>
+  <div class="cx on"><b id="r-on">{{ resumo.ONLINE }}</b><span>online</span></div>
+  <div class="cx off"><b id="r-off">{{ resumo.OFFLINE }}</b><span>fora do ar</span></div>
+</section>
+<section class="por-tipo">
+  {% for t, v in resumo.por_tipo.items() %}<span>{{ tipos.get(t, t) }}: <b>{{ v.OFFLINE }}</b> fora de {{ v.total }}</span>{% endfor %}
+</section>
+<p class="meta">Atualiza sozinho a cada {{ intervalo }} s · última atualização: <span id="atualizado">agora</span></p>
+<h2>Pontos ({{ pontos|length }})</h2>
+<div class="grade" id="grade">
+  {% for p in pontos %}{% include "_cartao.html" %}{% endfor %}
+</div>
+<script>window.INTERVALO = {{ intervalo * 1000 }};</script>
+<script src="{{ url_for('static', filename='painel.js') }}"></script>
+{% endblock %}
