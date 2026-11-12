@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titulo %}Painel GPON{% endblock %} · Prefeitura de Anápolis</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+{% if g.usuario %}
+<header class="topo">
+  <a class="marca" href="{{ url_for('painel.inicio') }}">Painel da Rede GPON</a>
+  <nav>
+    <a href="{{ url_for('painel.inicio') }}" {% if request.endpoint == 'painel.inicio' %}aria-current="page"{% endif %}>Painel</a>
+    <a href="{{ url_for('painel.busca') }}" {% if request.endpoint == 'painel.busca' %}aria-current="page"{% endif %}>Buscar</a>
+  </nav>
+  <span class="quem">{{ g.usuario['nome'] }} · {{ g.usuario['perfil'] }} · <a href="{{ url_for('auth.sair') }}">Sair</a></span>
+</header>
+{% endif %}
+<main class="conteudo">
+  {% for m in get_flashed_messages() %}<div class="aviso">{{ m }}</div>{% endfor %}
+  {% block conteudo %}{% endblock %}
+</main>
+</body>
+</html>
