@@ -1,0 +1,49 @@
+/* Painel GPON - responsivo (RNF01/RNF02): grade de cards que vira uma coluna no celular. */
+:root { --fundo:#f3f5f8; --pn:#fff; --ln:#d8dee6; --tx:#1d2733; --mu:#5d6b7a; --on:#178a3a; --off:#c62828; --cin:#6b7280; --az:#1d5fbf; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--fundo); color:var(--tx); font:15px/1.45 system-ui, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--az); }
+.topo { display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; padding:10px 18px; background:#12304f; color:#fff; }
+.topo a { color:#fff; text-decoration:none; }
+.topo .marca { font-weight:700; font-size:17px; }
+.topo nav { display:flex; gap:14px; }
+.topo nav a[aria-current] { border-bottom:2px solid #8fc1ff; }
+.topo .quem { margin-left:auto; font-size:13px; opacity:.9; }
+.conteudo { max-width:1200px; margin:0 auto; padding:16px; }
+h2 { font-size:18px; margin:18px 0 8px; }
+.meta { color:var(--mu); font-size:13px; margin:6px 0; }
+.aviso { background:#e8f0fe; border:1px solid #b8cdf5; padding:8px 12px; border-radius:8px; margin-bottom:10px; }
+.resumo { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.cx { background:var(--pn); border:1px solid var(--ln); border-radius:10px; padding:12px; text-align:center; }
+.cx b { display:block; font-size:30px; }
+.cx span { color:var(--mu); font-size:13px; }
+.cx.on b { color:var(--on); } .cx.off b { color:var(--off); }
+.por-tipo { display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:10px; font-size:14px; color:var(--mu); }
+.grade { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:10px; }
+.cartao { display:flex; flex-direction:column; gap:4px; background:var(--pn); border:1px solid var(--ln); border-left:7px solid var(--cin);
+          border-radius:10px; padding:10px 12px; text-decoration:none; color:var(--tx); min-height:84px; }
+.cartao.ONLINE { border-left-color:var(--on); } .cartao.OFFLINE { border-left-color:var(--off); background:#fff6f6; }
+.cartao .nome { font-weight:700; }
+.cartao .info { font-size:13px; color:var(--mu); }
+.cartao .estado { display:flex; gap:10px; align-items:center; margin-top:auto; }
+.selo { font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px; color:#fff; background:var(--cin); }
+.selo.ONLINE { background:var(--on); } .selo.OFFLINE { background:var(--off); } .selo.crit { background:#7a1010; }
+.tempo { font-weight:700; color:var(--off); font-size:13px; }
+.filtros { display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; background:var(--pn); border:1px solid var(--ln); border-radius:10px; padding:12px; }
+.filtros label { display:flex; flex-direction:column; gap:4px; font-size:13px; font-weight:600; }
+.filtros .largo { flex:1 1 240px; }
+input, select { font:inherit; padding:9px 10px; border:1px solid var(--ln); border-radius:8px; min-height:42px; background:#fff; }
+button { font:inherit; font-weight:700; padding:10px 18px; border:0; border-radius:8px; background:var(--az); color:#fff; min-height:42px; cursor:pointer; }
+.limpar { align-self:center; }
+.vazio { color:var(--mu); }
+.login { max-width:360px; margin:12vh auto 0; display:flex; flex-direction:column; gap:12px; background:var(--pn); border:1px solid var(--ln); border-radius:12px; padding:22px; }
+.login h1 { margin:0; font-size:22px; } .login .sub { margin:0; color:var(--mu); }
+.login label { display:flex; flex-direction:column; gap:4px; font-weight:600; font-size:14px; }
+.erro { color:var(--off); font-weight:600; }
+@media (max-width: 600px) {
+  .conteudo { padding:10px; }
+  .cx b { font-size:24px; }
+  .grade { grid-template-columns:1fr; }
+  .topo .quem { margin-left:0; width:100%; }
+  .filtros label, .filtros button { flex:1 1 100%; }
+}
