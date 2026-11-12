@@ -1,0 +1,6 @@
+<a class="cartao {{ p.status }}" href="#" title="Detalhe do ponto: card W08 (Sprint 3)">
+  <span class="nome">{{ p.nome }}{% if p.critico %} <span class="selo crit">CRÍTICO</span>{% endif %}</span>
+  <span class="info">{{ tipos.get(p.tipo, p.tipo) }} · {{ p.olt or 'sem OLT' }}{% if p.porta_gpon %} · PON {{ p.porta_gpon }}{% endif %}{% if p.cto %} · {{ p.cto }}{% endif %}</span>
+  <span class="estado"><span class="selo {{ p.status }}">{{ {'ONLINE':'ONLINE','OFFLINE':'FORA DO AR','SEM_TESTE':'SEM TESTE'}[p.status] }}</span>
+  {% if p.status == 'OFFLINE' and p.min_no_status is not none %}<span class="tempo">há {{ (p.min_no_status // 60) ~ ' h ' if p.min_no_status >= 60 else '' }}{{ p.min_no_status % 60 }} min</span>{% endif %}</span>
+</a>
