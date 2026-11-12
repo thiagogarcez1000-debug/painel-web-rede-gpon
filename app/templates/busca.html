@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Buscar{% endblock %}
+{% block conteudo %}
+<form class="filtros" method="get" role="search">
+  <label class="largo">Buscar <input name="texto" value="{{ f.texto }}" placeholder="Nome, IP, serial ou CTO"></label>
+  <label>Tipo <select name="tipo"><option value="">Todos</option>{% for k, v in tipos.items() %}<option value="{{ k }}" {% if f.tipo == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></label>
+  <label>OLT <select name="olt"><option value="">Todas</option>{% for o in olts %}<option {% if f.olt == o %}selected{% endif %}>{{ o }}</option>{% endfor %}</select></label>
+  <label>Status <select name="status"><option value="">Todos</option>{% for s, t in [('OFFLINE','Fora do ar'),('ONLINE','Online'),('SEM_TESTE','Sem teste')] %}<option value="{{ s }}" {% if f.status == s %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></label>
+  <button>Filtrar</button> <a class="limpar" href="{{ url_for('painel.busca') }}">Limpar</a>
+</form>
+<p class="meta" aria-live="polite">{{ pontos|length }} ponto(s) encontrado(s)</p>
+<div class="grade">
+  {% for p in pontos %}{% include "_cartao.html" %}{% else %}<p class="vazio">Nenhum ponto com esses filtros.</p>{% endfor %}
+</div>
+{% endblock %}
