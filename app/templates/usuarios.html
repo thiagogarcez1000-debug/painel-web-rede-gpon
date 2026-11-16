@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Usuários{% endblock %}
+{% block conteudo %}
+<h1>Usuários</h1>
+<form class="filtros" method="post" action="{{ url_for('usuarios.novo') }}" aria-label="Novo usuário">
+  <label>Login <input name="login" required></label>
+  <label class="largo">Nome <input name="nome" required></label>
+  <label>Perfil <select name="perfil">{% for x in perfis %}<option>{{ x }}</option>{% endfor %}</select></label>
+  <label>Senha inicial <input name="senha" type="password" minlength="8" required autocomplete="new-password"></label>
+  <button>Criar usuário</button>
+</form>
+<table class="hist">
+  <thead><tr><th>Login</th><th>Nome</th><th>Perfil</th><th>Situação</th><th></th></tr></thead>
+  <tbody>{% for u in us %}
+  <tr class="{{ '' if u.ativo else 'inativo' }}">
+    <td>{{ u.login }}</td><td>{{ u.nome }}</td>
+    <td><form method="post" action="{{ url_for('usuarios.alterar', uid=u.id) }}" class="linha">
+      <select name="perfil">{% for x in perfis %}<option {% if x == u.perfil %}selected{% endif %}>{{ x }}</option>{% endfor %}</select>
+      <input type="hidden" name="ativo" value="{{ u.ativo }}"><button class="peq">Salvar</button></form></td>
+    <td>{{ 'ativo' if u.ativo else 'desativado' }}</td>
+    <td><form method="post" action="{{ url_for('usuarios.alterar', uid=u.id) }}">
+      <input type="hidden" name="perfil" value="{{ u.perfil }}"><input type="hidden" name="ativo" value="{{ 0 if u.ativo else 1 }}">
+      <button class="peq {{ 'cinza' if u.ativo else '' }}">{{ 'Desativar' if u.ativo else 'Reativar' }}</button></form></td>
+  </tr>{% endfor %}</tbody>
+</table>
+{% endblock %}
