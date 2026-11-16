@@ -1,4 +1,5 @@
 """Painel com resumo e cards (W05 - RF02) e busca com filtros (W06 - RF03)."""
+import time
 from datetime import datetime
 
 from flask import Blueprint, current_app, g, render_template, request
@@ -67,7 +68,10 @@ def inicio():
 def busca():
     f = {k: request.args.get(k, "").strip() for k in ("texto", "tipo", "olt", "status", "cto")}
     olts = [r["nome"] for r in conectar().execute("SELECT nome FROM olt ORDER BY nome")]
-    return render_template("busca.html", pontos=buscar(**f), f=f, olts=olts, tipos=TIPOS)
+    t0 = time.perf_counter()
+    pontos = buscar(**f)
+    ms = round((time.perf_counter() - t0) * 1000, 1)        # indicador de tempo da busca (CA03), Sprint 3
+    return render_template("busca.html", pontos=pontos, f=f, olts=olts, tipos=TIPOS, ms=ms)
 
 
 @bp.route("/api/pontos")
