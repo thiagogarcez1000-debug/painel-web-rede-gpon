@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block titulo %}{{ p.nome }}{% endblock %}
+{% block conteudo %}
+<p class="meta"><a href="{{ url_for('painel.inicio') }}">← Painel</a></p>
+<section class="det-topo">
+  <h1>{{ p.nome }}{% if p.critico %} <span class="selo crit">CRÍTICO</span>{% endif %}</h1>
+  <span class="selo {{ p.status }}">{{ {'ONLINE':'ONLINE','OFFLINE':'FORA DO AR','SEM_TESTE':'SEM TESTE'}[p.status] }}</span>
+  {% if p.status == 'OFFLINE' and min_no_status is not none %}<span class="tempo">fora do ar há {{ (min_no_status // 60) ~ ' h ' if min_no_status >= 60 else '' }}{{ min_no_status % 60 }} min</span>{% endif %}
+</section>
+<div class="det-grade">
+  <section class="ficha" aria-label="Dados de rede">
+    <h2>Dados de rede</h2>
+    <dl>
+      <dt>Tipo</dt><dd>{{ tipos.get(p.tipo, p.tipo) }}</dd>
+      <dt>OLT / PON</dt><dd>{{ p.olt or 'sem OLT' }}{% if p.porta_gpon %} · PON {{ p.porta_gpon }}{% endif %}</dd>
+      <dt>CTO</dt><dd>{{ p.cto or '—' }}</dd>
+      <dt>Serial</dt><dd>{{ p.serial or '—' }}</dd>
+      <dt>IP de gerência</dt><dd>{{ p.ip or '—' }}</dd>
+      <dt>Endereço</dt><dd>{{ p.endereco or '—' }}</dd>
+    </dl>
+  </section>
+  <section class="ficha" aria-label="Rota da fibra">
+    <h2>Rota da fibra</h2>
+    {% if svg %}
+    <svg class="rota" viewBox="0 0 {{ svg.w }} {{ svg.h }}" role="img" aria-label="Rota OLT, CTO e ponto">
+      <polyline points="{{ svg.pts }}" fill="none" stroke="#1d5fbf" stroke-width="4" stroke-dasharray="10 6"/>
+      {% for n in rota.nos %}
+      <g><circle cx="{{ n.x }}" cy="{{ n.y }}" r="9" class="no {{ n.tipo }}"/>
+      {% set fim = n.x > svg.w - 150 %}
+      <text x="{{ n.x - 12 if fim else n.x + 12 }}" y="{{ n.y - 12 }}" text-anchor="{{ 'end' if fim else 'start' }}">{{ n.nome if n.tipo == 'OLT' else ('CTO ' ~ n.nome if n.tipo == 'CTO' else 'PONTO') }}</text></g>
+      {% endfor %}
+    </svg>
+    <ol class="trechos">
+      {% for n in rota.nos %}<li><b>{{ n.tipo }}</b> {{ n.nome }}{% if n.trecho_m %} — {{ n.trecho_m }} m desde o anterior{% endif %}</li>{% endfor %}
+    </ol>
+    <p class="meta">Distância em linha reta: {{ rota.total_m }} m.{% if not rota.completa %} <b>Rota incompleta:</b> falta posição da OLT, da CTO ou do ponto no cadastro.{% endif %}</p>
+    {% else %}
+    <p class="vazio">Sem posição cadastrada para desenhar a rota.</p>
+    {% endif %}
+  </section>
+</div>
+<section class="ficha" aria-label="Histórico de quedas">
+  <h2>Histórico de quedas ({{ quedas|length }})</h2>
+  {% if quedas %}
+  <table class="hist">
+    <thead><tr><th>Início</th><th>Volta</th><th>Duração</th></tr></thead>
+    <tbody>{% for q in quedas %}
+      <tr><td>{{ q.inicio.replace('T', ' ')[:16] }}</td><td>{{ q.fim.replace('T', ' ')[:16] if q.fim else 'em andamento' }}</td>
+      <td>{{ (q.duracao_min // 60) ~ ' h ' if q.duracao_min and q.duracao_min >= 60 else '' }}{{ (q.duracao_min or 0) % 60 }} min</td></tr>
+    {% endfor %}</tbody>
+  </table>
+  {% else %}<p class="vazio">Nenhuma queda registrada.</p>{% endif %}
+</section>
+{% endblock %}
