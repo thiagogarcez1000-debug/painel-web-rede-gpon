@@ -31,4 +31,8 @@ def create_app(teste_config=None):
     from .painel import bp as painel_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(painel_bp)
+    from .detalhe import bp as detalhe_bp            # Sprint 3 (W08/W09)
+    from .usuarios import bp as usuarios_bp          # Sprint 3 (W13)
+    app.register_blueprint(detalhe_bp)
+    app.register_blueprint(usuarios_bp)
     return app
