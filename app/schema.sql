@@ -38,5 +38,12 @@ CREATE TABLE IF NOT EXISTS log_acao (
   detalhe   TEXT,
   quando    TEXT NOT NULL
 );
+-- Sprint 3 (W09, 15/11/2026): CTO com posição, para a rota OLT -> CTO -> ponto.
+CREATE TABLE IF NOT EXISTS cto (
+  id      INTEGER PRIMARY KEY,
+  nome    TEXT NOT NULL UNIQUE,
+  olt_id  INTEGER REFERENCES olt(id),
+  lat REAL, lon REAL
+);
 CREATE INDEX IF NOT EXISTS ix_ponto_status ON ponto(status);
 CREATE INDEX IF NOT EXISTS ix_evento_ponto ON evento_status(ponto_id, quando);
