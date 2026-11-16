@@ -47,3 +47,22 @@ button { font:inherit; font-weight:700; padding:10px 18px; border:0; border-radi
   .topo .quem { margin-left:0; width:100%; }
   .filtros label, .filtros button { flex:1 1 100%; }
 }
+/* Sprint 3: detalhe, rota, histórico e usuários */
+.det-topo { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; }
+.det-topo h1 { font-size:22px; margin:4px 0; width:100%; }
+.det-grade { display:grid; grid-template-columns:1fr 1.4fr; gap:12px; margin:12px 0; }
+.ficha { background:var(--pn); border:1px solid var(--ln); border-radius:10px; padding:12px 14px; }
+.ficha h2 { font-size:16px; margin:0 0 8px; }
+.ficha dl { display:grid; grid-template-columns:auto 1fr; gap:6px 12px; margin:0; font-size:14px; }
+.ficha dt { color:var(--mu); } .ficha dd { margin:0; font-weight:600; overflow-wrap:anywhere; }
+.rota { width:100%; height:auto; background:#eef3f9; border-radius:8px; }
+.rota text { font-size:13px; font-weight:700; fill:#1d2733; }
+.rota .no.OLT { fill:#12304f; } .rota .no.CTO { fill:#e08a1e; } .rota .no.PONTO { fill:var(--off); }
+.trechos { margin:8px 0 0; padding-left:20px; font-size:14px; }
+.hist { width:100%; border-collapse:collapse; font-size:14px; background:var(--pn); }
+.hist th, .hist td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--ln); }
+.hist tr.inativo td { color:var(--mu); }
+.linha { display:flex; gap:6px; }
+button.peq { padding:6px 10px; min-height:34px; font-size:13px; }
+button.cinza { background:#6b7280; }
+@media (max-width: 600px) { .det-grade { grid-template-columns:1fr; } .hist { font-size:13px; } }
