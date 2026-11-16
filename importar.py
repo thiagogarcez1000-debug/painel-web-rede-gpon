@@ -26,7 +26,8 @@ def _olt(c, nome):
     return c.execute("SELECT id FROM olt WHERE nome = ?", (nome,)).fetchone()[0]
 
 
-def gravar(banco, linhas):
+def gravar(banco, linhas, extras=None):
+    """extras (só nos dados fictícios): posições das OLTs e CTOs e histórico de quedas (Sprint 3)."""
     criar_tabelas(banco)
     with sqlite3.connect(banco) as c:
         n = 0
@@ -39,7 +40,39 @@ def gravar(banco, linhas):
                            lat=excluded.lat, lon=excluded.lon, critico=excluded.critico""",
                       {**l, "olt_id": olt_id, "critico": int(any(k in l["nome"].upper() for k in CRITICOS))})
             n += 1
+        if extras:
+            for nome, (lat, lon) in extras["olts"].items():
+                c.execute("UPDATE olt SET lat = ?, lon = ? WHERE nome = ?", (lat, lon, nome))
+            for nome, (olt, lat, lon) in extras["ctos"].items():
+                c.execute("""INSERT INTO cto (nome, olt_id, lat, lon) VALUES (?, (SELECT id FROM olt WHERE nome = ?), ?, ?)
+                             ON CONFLICT(nome) DO UPDATE SET lat = excluded.lat, lon = excluded.lon""", (nome, olt, lat, lon))
+            c.execute("DELETE FROM evento_status")          # histórico fictício é refeito a cada importação
+            for ip, status, quando in extras["eventos"]:
+                c.execute("INSERT INTO evento_status (ponto_id, status, quando) SELECT id, ?, ? FROM ponto WHERE ip = ?",
+                          (status, quando, ip))
     return n
+
+
+def extras_ficticios(linhas, semente=11):
+    """Posições inventadas de OLTs e CTOs perto dos pontos e quedas fictícias nos últimos 7 dias (W08/W09)."""
+    rnd = random.Random(semente + 1)
+    agora = datetime.now()
+    olts = {f"OLT 0{k}": (round(-16.33 + rnd.uniform(-0.03, 0.03), 6), round(-48.95 + rnd.uniform(-0.03, 0.03), 6)) for k in range(1, 7)}
+    ctos, eventos = {}, []
+    for l in linhas:
+        if l["cto"] not in ctos:
+            ctos[l["cto"]] = (l["olt"], round(l["lat"] + rnd.uniform(-0.004, 0.004), 6), round(l["lon"] + rnd.uniform(-0.004, 0.004), 6))
+        t = agora - timedelta(days=7)
+        for _ in range(rnd.randint(0, 3)):                       # 0 a 3 quedas encerradas por ponto
+            t += timedelta(hours=rnd.randint(6, 40))
+            if t >= agora - timedelta(hours=12):
+                break
+            dur = timedelta(minutes=rnd.choice([10, 15, 25, 40, 75, 130]))
+            eventos += [(l["ip"], "OFFLINE", t.isoformat(timespec="seconds")), (l["ip"], "ONLINE", (t + dur).isoformat(timespec="seconds"))]
+            t += dur
+        if l["status"] == "OFFLINE" and l["desde"]:              # queda em andamento
+            eventos.append((l["ip"], "OFFLINE", l["desde"]))
+    return {"olts": olts, "ctos": ctos, "eventos": eventos}
 
 
 def ficticios(qtd=60, semente=11):
@@ -93,5 +126,9 @@ if __name__ == "__main__":
     g.add_argument("--planilha")
     ap.add_argument("--banco", default=str(RAIZ / "dados" / "painel.sqlite"))
     a = ap.parse_args()
-    n = gravar(a.banco, ficticios() if a.ficticio else da_planilha(a.planilha))
+    if a.ficticio:
+        lin = ficticios()
+        n = gravar(a.banco, lin, extras_ficticios(lin))
+    else:
+        n = gravar(a.banco, da_planilha(a.planilha))
     print(f"{n} pontos gravados em {Path(a.banco).name}")
