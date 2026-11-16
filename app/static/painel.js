@@ -5,7 +5,7 @@
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const tempo = (m) => (m === null || m === undefined ? "" : "há " + (m >= 60 ? Math.floor(m / 60) + " h " : "") + (m % 60) + " min");
   function cartao(p) {
-    return `<a class="cartao ${p.status}" href="#" title="Detalhe do ponto: card W08 (Sprint 3)">` +
+    return `<a class="cartao ${p.status}" href="/ponto/${p.id}">` +
       `<span class="nome">${esc(p.nome)}${p.critico ? ' <span class="selo crit">CRÍTICO</span>' : ""}</span>` +
       `<span class="info">${TIPOS[p.tipo] || esc(p.tipo)} · ${esc(p.olt || "sem OLT")}${p.porta_gpon ? " · PON " + esc(p.porta_gpon) : ""}${p.cto ? " · " + esc(p.cto) : ""}</span>` +
       `<span class="estado"><span class="selo ${p.status}">${TXT[p.status]}</span>` +
